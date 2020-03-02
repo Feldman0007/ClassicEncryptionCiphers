@@ -8,6 +8,8 @@
 #include <stdlib.h> /* For miscellenous C functions */
 #include "CipherInterface.h"
 #include <sstream>
+#include <cstring>
+#include <cmath>
 
 using namespace std;
 

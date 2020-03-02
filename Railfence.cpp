@@ -20,7 +20,7 @@ string Railfence::encrypt(const string& p)
 		return "";
 	}
 	string cipherText = "";
-	string plaintext = p; //copy of the plaintext so we can modify it. 
+	string plaintext = p; //copy of the plaintext so we can modify it.
 	//First scan input text for positions of capital letters, then strip case
 	for (int i = 0; i < plaintext.size(); i++)
 	{
@@ -43,11 +43,11 @@ string Railfence::encrypt(const string& p)
 	asciiToInt << key;
 	int numRails = 0;
 	asciiToInt >> numRails;
-	int railLength = ceil(plaintext.size() / double(numRails)); //number of columns if we treat rails as 2d Matrix 	
-	
+	int railLength = ceil(plaintext.size() / double(numRails)); //number of columns if we treat rails as 2d Matrix
+
 	//Create rail "matrix"
 	memset(rails, '-', sizeof(rails[0][0]) * 100 * 100);
-	int cursor = 0; //keeps track of position in plaintext 
+	int cursor = 0; //keeps track of position in plaintext
 	bool doneProcessing = false;
 	for (int col = 0; col < railLength; col++)
 	{
@@ -78,7 +78,7 @@ string Railfence::encrypt(const string& p)
 			cipherText += rails[i][j]; //read off letters rail by rail to produce ciphertext
 		}
 	}
-	
+
 	return cipherText;
 
 
@@ -97,18 +97,18 @@ string Railfence::decrypt(const string& ciphertext)
 	stringstream asciiToInt;
 	asciiToInt << key;
 	int numRails = 0;
-	asciiToInt >> numRails; 
-	int railLength = ceil(ciphertext.size() / double(numRails)); //number of columns if we treat rails as 2d Matrix 	
-	int filledRails = ciphertext.size() / numRails; //number of letters per rail, assuming we no partially filled columns 
+	asciiToInt >> numRails;
+	int railLength = ceil(ciphertext.size() / double(numRails)); //number of columns if we treat rails as 2d Matrix
+	int filledRails = ciphertext.size() / numRails; //number of letters per rail, assuming we no partially filled columns
 	int remainingLetters = ciphertext.size() % numRails; // remaining letters
 
 
 	//we will repopulate a rail matrix to show understanding of the decryption algorithm
 	//these steps are only to show understanding of decryption
 	int cursor = 0;
-	for (int i = 0; i < numRails; i++) //read from all all rails except 
+	for (int i = 0; i < numRails; i++) //read from all all rails except
 	{
-		for (int j = 0; j < filledRails; j++) //fill out each rail 
+		for (int j = 0; j < filledRails; j++) //fill out each rail
 		{
 			showUnderstanding[i][j] = ciphertext[cursor];
 			cursor++;

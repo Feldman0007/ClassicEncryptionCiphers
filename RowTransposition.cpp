@@ -8,7 +8,7 @@ bool RowTransposition::setKey(const string& inputkey)
 	}
 	for (int i = 0; i < key.size(); i++)
 	{
-		if (!isdigit(inputkey[i])) 
+		if (!isdigit(inputkey[i]))
 		{
 			return false;
 		}
@@ -67,7 +67,7 @@ string RowTransposition::encrypt(const string& p)
 		}
 	}
 	//perform encryption
-	for (int i = 0; i < key.size(); i++) 
+	for (int i = 0; i < key.size(); i++)
 	{
 		char c = key[i];
 		int col = -1 + c - '0'; //rearrange columns based on order of key
@@ -102,10 +102,10 @@ string RowTransposition::decrypt(const string& ciphertext)
 			for (int k = 0; k < 7; k++)
 			{
 				char c = key[k];
-				int keyValue = -1 + c - '0'; 
+				int keyValue = -1 + c - '0';
 				if (keyValue == j) //find column position 1,2,3,...7
 				{
-					if (rearrangedTranspositionMatrix[i][k] != '-') 
+					if (rearrangedTranspositionMatrix[i][k] != '-')
 					{
 						plaintext += rearrangedTranspositionMatrix[i][k]; //read off the ordered rows to obtain plaintext
 					}
@@ -113,7 +113,7 @@ string RowTransposition::decrypt(const string& ciphertext)
 			}
 		}
 	}
-	
+
 	for (int i = 0; i < capitalizationTracker.size(); i++)
 	{
 		if (capitalizationTracker[i] == 'u')
