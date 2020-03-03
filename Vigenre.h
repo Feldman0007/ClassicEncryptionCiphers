@@ -22,6 +22,7 @@ class Vigenre : public CipherInterface
 	/** The public members **/
 public:
 
+	Vigenre();
 	/**
 	 * Sets the key to use
 	 * @param key - the key to use

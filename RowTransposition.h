@@ -7,9 +7,8 @@
 #include <stdio.h>  /* For standard I/O */
 #include <stdlib.h> /* For miscellenous C functions */
 #include "CipherInterface.h"
+#include <sstream>
 #include <iostream>
-#include <cstring>
-#include <cmath>
 
 using namespace std;
 
@@ -54,8 +53,8 @@ public:
 	/* The protected members */
 protected:
 
-	char transpositionMatrix[100][7]; // holds messages up to 700 characters long
-	char rearrangedTranspositionMatrix[100][7]; //holds the rearranged matrix
+	char transpositionMatrix[1000][7]; // holds messages up to 700 characters long
+	char rearrangedTranspositionMatrix[1000][7]; //holds the rearranged matrix
 	string capitalizationTracker = "";
 };
 

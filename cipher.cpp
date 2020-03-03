@@ -26,60 +26,80 @@ void performOperation(CipherInterface* const, const string&, const string&, cons
 int main(int argc, char** argv)
 {
 	
-	////Testing
-	//CipherInterface* cipher = new Railfence();
-	//validateAndSetKey(cipher, "3");
-	//performOperation(cipher, "e", "small.txt", "railfenceTest.txt");
-	//performOperation(cipher, "d", "railfenceTest.txt", "decrypt.txt");
-	//return 0;
+	//Testing
+	CipherInterface* cipher = new Vigenre();
+	CipherInterface* cipher1 = new Caesar();
+	CipherInterface* cipher2 = new RowTransposition();
+	CipherInterface* cipher3 = new Playfair();
+	CipherInterface* cipher4 = new Railfence();
 
-	/*Make sure we have only 5 command line arguments before moving forward*/
-	if (argc != 5)
-	{
-		cout << "cipher.exe only accepts 5 arguments: <CIPHER NAME> <KEY> <ENC/DEC> <INPUTFILE> <OUTPUT FILE>" << endl;
-		exit(-1);
-	}
+	validateAndSetKey(cipher, "security");
+	validateAndSetKey(cipher1, "4"); //try invalid keys too
+	validateAndSetKey(cipher2, "7654321");
+	validateAndSetKey(cipher3, "security");
+	validateAndSetKey(cipher4, "4");
 
-	/*Variables used to parse the command line argument and execute the ciphers dynamically*/
-	string cipherName = argv[1];
-	string key = argv[2];
-	string operation = argv[3];
-	string inputFileName = argv[4];
-	string outputFileName = argv[5];
+	//performOperation(cipher, "enc", "small.txt", "vgencrypt.txt");
+	//performOperation(cipher1, "enc", "small.txt", "csencrypt.txt");
+	//performOperation(cipher2, "enc", "small.txt", "rtencrypt.txt");
+	//performOperation(cipher3, "enc", "small.txt", "pfencrypt.txt");
+	//performOperation(cipher4, "enc", "small.txt", "rfencrypt.txt");
 
-	CipherInterface* cipher = nullptr; /*pointer to an instance of our cipher*/
-
-	if (iequals(cipherName, "PLF")) 
-	{
-		cipher = new Playfair();
-	}
-	else if (iequals(cipherName, "RFC")) 
-	{
-		cipher = new Railfence();
-	}
-	else if (iequals(cipherName, "CES"))
-	{
-		cipher = new Caesar();
-	}
-	else if (iequals(cipherName, "RTS"))
-	{
-		cipher = new RowTransposition();
-	}
-	else if (iequals(cipherName, "VIG"))
-	{
-		cipher = new Vigenre();
-	}
-	else
-	{
-		cout << "Invalid cipher type!\n";
-		exit(-1);
-	}
-
-	assertValidCipherAssignment(cipher);
-	validateAndSetKey(cipher, key);
-	performOperation(cipher, operation, inputFileName, outputFileName);
+	performOperation(cipher, "dec", "vgencrypt.txt", "vgdecrypt.txt");
+	performOperation(cipher1, "dec", "csencrypt.txt", "csdecrypt.txt");
+	performOperation(cipher2, "dec", "rtencrypt.txt", "rtdecrypt.txt");
+	performOperation(cipher3, "dec", "pfencrypt.txt", "pfdecrypt.txt");
+	performOperation(cipher4, "dec", "rfencrypt.txt", "rfdecrypt.txt");
 
 	return 0;
+
+	///*Make sure we have only 5 command line arguments before moving forward*/
+	//if (argc != 5)
+	//{
+	//	cout << "cipher.exe only accepts 5 arguments: <CIPHER NAME> <KEY> <ENC/DEC> <INPUTFILE> <OUTPUT FILE>" << endl;
+	//	exit(-1);
+	//}
+
+	///*Variables used to parse the command line argument and execute the ciphers dynamically*/
+	//string cipherName = argv[1];
+	//string key = argv[2];
+	//string operation = argv[3];
+	//string inputFileName = argv[4];
+	//string outputFileName = argv[5];
+
+	//CipherInterface* cipher = nullptr; /*pointer to an instance of our cipher*/
+
+	//if (iequals(cipherName, "PLF")) 
+	//{
+	//	cipher = new Playfair();
+	//}
+	//else if (iequals(cipherName, "RFC")) 
+	//{
+	//	cipher = new Railfence();
+	//}
+	//else if (iequals(cipherName, "CES"))
+	//{
+	//	cipher = new Caesar();
+	//}
+	//else if (iequals(cipherName, "RTS"))
+	//{
+	//	cipher = new RowTransposition();
+	//}
+	//else if (iequals(cipherName, "VIG"))
+	//{
+	//	cipher = new Vigenre();
+	//}
+	//else
+	//{
+	//	cout << "Invalid cipher type!\n";
+	//	exit(-1);
+	//}
+
+	//assertValidCipherAssignment(cipher);
+	//validateAndSetKey(cipher, key);
+	//performOperation(cipher, operation, inputFileName, outputFileName);
+
+	//return 0;
 }
 
 void validateAndSetKey(CipherInterface* const cipher, const string& key)
@@ -98,8 +118,8 @@ void performOperation(CipherInterface* const cipher, const string& operation, co
 	string inputText = readFile(inputFilename);
 	if (iequals(operation, "ENC"))
 	{
-		string cipherText = cipher->encrypt(inputText);
-		writeFile(outputFilename, cipherText);
+		string encryptionInformation = cipher->encrypt(inputText); //we may want to store encryption information in addition to the ciphertext
+		writeFile(outputFilename, encryptionInformation);
 	}
 	/*Perform decryption */
 	else if (iequals(operation, "DEC"))
@@ -124,6 +144,7 @@ string readFile(const string& filename)
 	}
 	if (fileReader.peek() == std::ifstream::traits_type::eof())
 	{
+		cout << "Input file has no text!";
 		exit(-1);
 	}
 
@@ -131,7 +152,18 @@ string readFile(const string& filename)
 
 	while (!fileReader.eof()) 
 	{
-		fileReader >> fileContents;
+		string buffer = "";
+		fileReader >> buffer;
+		for (int i = 0; i < buffer.size(); i++)
+		{
+			fileContents += buffer[i];
+		}
+		//Add a space between each peice of info. don't add a space at the end though
+
+		if (!fileReader.eof()) 
+		{
+			fileContents += ' ';
+		}
 	}
 
 	fileReader.close();

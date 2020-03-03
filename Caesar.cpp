@@ -5,11 +5,11 @@ bool Caesar::setKey(const string& inputkey)
 {
 	//Key should be a number, check if there are any non-numeric characters
 	int i = 0;
-	if (inputkey[0] == '-')
+	if (inputkey[0] == '-') //we can technically have a negative key, so if there is a negative key ignore it for now
 	{
 		i++;
 	}
-	for (i; i < inputkey.size(); i++)
+	for (; i < inputkey.size(); i++)
 	{
 		if (!isdigit(inputkey[i]))
 		{
@@ -17,16 +17,6 @@ bool Caesar::setKey(const string& inputkey)
 			return false;
 		}
 	}
-	//try
-	//{
-	//	int testIfnumber = std::stoi(inputkey);
-	//}
-	//catch (std::invalid_argument const &e) 
-	//{
-	//	cout << "Caesar Cipher key should be a positive integer";
-	//	return false;
-	//}
-	//If it is, the key is valid
 	key = inputkey;
 	return true;
 }

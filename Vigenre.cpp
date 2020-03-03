@@ -1,5 +1,21 @@
 #include "Vigenre.h"
 
+
+
+Vigenre::Vigenre()
+{
+	//First create the Vigenre table
+	for (int i = 0; i < 26; i++)
+	{
+		for (int j = 0; j < 26; j++)
+		{
+			vigenreMatrix[i][j] = alphabet[j];
+		}
+		alphabet.insert(26, 1, alphabet[0]); // insert the 4th character at the beginning
+		alphabet.erase(0, 1);
+	}
+}
+
 bool Vigenre::setKey(const string& inputkey)
 {
 	for (int i = 0; i < inputkey.size(); i++)
@@ -19,7 +35,7 @@ string Vigenre::encrypt(const string& p)
 	{
 		return "";
 	}
-	string cipherText = "";
+	string ciphertext = "";
 	string plaintext = p; //copy of the plaintext so we can modify it. 
 	//First scan input text for positions of capital letters, then strip case
 	for (int i = 0; i < plaintext.size(); i++)
@@ -36,17 +52,6 @@ string Vigenre::encrypt(const string& p)
 	for (int i = 0; i < plaintext.size(); i++)
 	{
 		plaintext[i] = tolower(plaintext[i]);
-	}
-
-	//First create the Vigenre table
-	for(int i = 0; i < 26; i++)
-	{
-		for (int j = 0; j < 26; j++)
-		{
-			vigenreMatrix[i][j] = alphabet[j];
-		}
-		alphabet.insert(26, 1, alphabet[0]); // insert the 4th character at the beginning
-		alphabet.erase(0, 1);
 	}
 	//Stretch key out to meet the length of the plaintext 
 	if (key.size() > plaintext.size())
@@ -98,18 +103,75 @@ string Vigenre::encrypt(const string& p)
 				break;
 			}
 		}
-		cipherText += vigenreMatrix[x][y];
+		ciphertext += vigenreMatrix[x][y];
 	}
 
-	return cipherText;
+	//ENCODE ALL NECESSARY INFORMATION FOR DECRYPTION*****************************************************************************************************************************************************************
+	string encryptionInformation; //this will contain our ciphertext as well as necessary information needed for decryption
+	for (int i = 0; i < ciphertext.size(); i++)
+	{
+		encryptionInformation += ciphertext[i]; //the first line will contain the ciphertext,
+	}
+	encryptionInformation += ' '; //delimited by a space
+
+	for (int i = 0; i < capitalizationTracker.size(); i++)
+	{
+		encryptionInformation += capitalizationTracker[i];  //this section will contain the capitalization of the original plaintext
+	}
+
+	return encryptionInformation;
 }
 
-string Vigenre::decrypt(const string& ciphertext)
+string Vigenre::decrypt(const string& p)
 {
-	if (ciphertext.size() == 0)
+	if (p.size() == 0)
 	{
 		return "";
 	}
+
+	//Parse through encryption for encryption information and ciphertext
+	string encryptionInformation = p;// create copy so we can make modifications during processing
+	char delimiter = ' ';
+
+	int delimPos = encryptionInformation.find(delimiter);
+	string ciphertext = encryptionInformation.substr(0, delimPos); // extract ciphertext
+	encryptionInformation = encryptionInformation.substr(delimPos + 1, encryptionInformation.size());
+
+	delimPos = encryptionInformation.find(delimiter);
+	capitalizationTracker = encryptionInformation.substr(0, delimPos); // extract capitalization info
+	encryptionInformation = encryptionInformation.substr(delimPos + 1, encryptionInformation.size());
+
+	//First create the Vigenre table
+	for (int i = 0; i < 26; i++)
+	{
+		for (int j = 0; j < 26; j++)
+		{
+			vigenreMatrix[i][j] = alphabet[j];
+		}
+		alphabet.insert(26, 1, alphabet[0]); // insert the 4th character at the beginning
+		alphabet.erase(0, 1);
+	}
+	//Stretch key out to meet the length of the plaintext 
+	if (key.size() > ciphertext.size())
+	{
+		string useableKey = key.substr(0, ciphertext.size());
+		key = useableKey;
+	}
+	else
+	{
+		int cursor = 0;
+		int originalkeysize = key.size(); //repeating key
+		while (key.size() < ciphertext.size())
+		{
+			if (cursor == originalkeysize)
+			{
+				cursor = 0;
+			}
+			key += key[cursor];
+			cursor++;
+		}
+	}
+	
 	string plaintext = "";
 	for (int i = 0; i < ciphertext.size(); i++)
 	{

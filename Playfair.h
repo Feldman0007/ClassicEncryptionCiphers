@@ -52,8 +52,9 @@ class Playfair: public CipherInterface
 		/* The protected members */
 	protected:
 
-		char playfairMatrix[5][5];
 		string alphabet = "abcdefghijklmnopqrstuvwxyz";
+		//The information below will be will be encoded in the encryption output file; 
+		char playfairMatrix[5][5];
 		string capitalizationTracker = "";
 		string wasAnIorJ = "";
 		string bufferInsertedAt = "";

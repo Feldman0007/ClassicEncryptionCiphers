@@ -43,6 +43,7 @@ class CipherInterface
 
 		/* The protected members */
 	protected:
+
 		string key;
 };
 

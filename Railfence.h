@@ -8,8 +8,6 @@
 #include <stdlib.h> /* For miscellenous C functions */
 #include "CipherInterface.h"
 #include <sstream>
-#include <cstring>
-#include <cmath>
 
 using namespace std;
 
@@ -55,7 +53,6 @@ public:
 protected:
 
 	char rails[100][100];
-	char showUnderstanding[100][100]; //not necessary, but will repopulate it using ciphertext to show understanding of decryption
 	string capitalizationTracker = "";
 
 };

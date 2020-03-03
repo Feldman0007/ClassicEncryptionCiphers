@@ -44,7 +44,7 @@ string Playfair::encrypt(const string& p)
 	int columnPosition = 0;
 
 	string plaintext = p; //creating a duplicate of plaintext so we can modify
-	string cipherText;
+	string ciphertext; 
 	
 	//First scan input text for positions of capital letters, then strip case
 	for (int i = 0; i < plaintext.size(); i++)
@@ -219,23 +219,23 @@ string Playfair::encrypt(const string& p)
 		if (pos1.first == pos2.first) //if letters are in the same row
 		{
 			int col = (pos1.second + 1) % 5; //replace letter with letter to the right of it, wrapping horizontally
-			cipherText += playfairMatrix[pos1.first][col]; //and append it to the ciphertext
+			ciphertext += playfairMatrix[pos1.first][col]; //and append it to the ciphertext
 
 			int col2 = (pos2.second + 1) % 5;
-			cipherText += playfairMatrix[pos2.first][col2];
+			ciphertext += playfairMatrix[pos2.first][col2];
 		}
 		else if (pos1.second == pos2.second) //if letters are in the same column
 		{
 			int row = (pos1.first + 1) % 5; //replace letter with letter beneath it, wrapping vertically
-			cipherText += playfairMatrix[row][pos1.second]; //and append it to the ciphertext
+			ciphertext += playfairMatrix[row][pos1.second]; //and append it to the ciphertext
 			
 			int row2 = (pos2.first + 1) % 5;
-			cipherText += playfairMatrix[row2][pos2.second];
+			ciphertext += playfairMatrix[row2][pos2.second];
 		}
 		else //if letters are in differing columns and rows
 		{
-			cipherText += playfairMatrix[pos1.first][pos2.second]; //first letter is replaced by the letter that falls in the row of the first letter and column of the second letter
-			cipherText += playfairMatrix[pos2.first][pos1.second]; //second letter is replaced by the letter that falls in the row of the second letter and column of the first letter
+			ciphertext += playfairMatrix[pos1.first][pos2.second]; //first letter is replaced by the letter that falls in the row of the first letter and column of the second letter
+			ciphertext += playfairMatrix[pos2.first][pos1.second]; //second letter is replaced by the letter that falls in the row of the second letter and column of the first letter
 		}
 
 		if (paddingUsed) 
@@ -247,45 +247,109 @@ string Playfair::encrypt(const string& p)
 			i += 2; //we processed to two letters of the plaintext. no padding was used.
 		}
 	}
-	return cipherText; 
+
+	//ENCODE ALL NECESSARY INFORMATION FOR DECRYPTION*****************************************************************************************************************************************************************
+	string encryptionInformation; //this will contain our ciphertext as well as necessary information needed for decryption
+	for (int i = 0; i < ciphertext.size(); i++)
+	{
+		encryptionInformation += ciphertext[i]; //the first line will contain the ciphertext,
+	}
+	encryptionInformation += ' '; //delimited by a space
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			encryptionInformation += playfairMatrix[i][j]; //first section will contain the encoded playfair matrix
+		}
+	}
+	encryptionInformation += ' '; // delimited by space
+	for (int i = 0; i < wasAnIorJ.size(); i++)
+	{
+		encryptionInformation += wasAnIorJ[i]; //this section will contain the positions of i's and j's
+	}
+	encryptionInformation += ' '; //delimited by a space
+	for (int i = 0; i < capitalizationTracker.size(); i++)
+	{
+		encryptionInformation += capitalizationTracker[i];  //this section will contain the capitalization of the original plaintext
+	}
+	encryptionInformation += ' '; //delimited by a space
+	for (int i = 0; i < bufferInsertedAt.size(); i++) 
+	{
+		encryptionInformation += bufferInsertedAt[i]; //this section will contain the location of buffers inserted during playfair encryption
+	}
+
+	return encryptionInformation;
 }
 
-string Playfair::decrypt(const string& cipherText) 
+string Playfair::decrypt(const string& p)
 { 
-	if (cipherText.size() == 0)
+	if (p.size() == 0)
 	{
 		return "";
 	}
-	string unofficialPlaintext = "";
-	string plainText = "";
 
-	for (int i = 0; i < cipherText.size();) //perform a rough translation, we will correct padded characters and capitalization later 
+	//Parse through encryption for encryption information and ciphertext
+	string encryptionInformation = p;// create copy so we can make modifications during processing
+	char delimiter = ' ';
+
+	int delimPos = encryptionInformation.find(delimiter);
+	string ciphertext = encryptionInformation.substr(0, delimPos); // extract ciphertext
+	encryptionInformation = encryptionInformation.substr(delimPos + 1, encryptionInformation.size());
+
+	delimPos = encryptionInformation.find(delimiter);
+	string token = encryptionInformation.substr(0, delimPos); // extract playfair table information
+	encryptionInformation = encryptionInformation.substr(delimPos + 1, encryptionInformation.size());
+	int cursor = 0;
+	for (int i = 0; i < 5; i++)
 	{
-		char firstLetter = cipherText[i];
+		for (int j = 0; j < 5; j++)
+		{
+			playfairMatrix[i][j] = token[cursor]; //populate plaifair matrix
+			cursor++;
+		}
+	}
+	delimPos = encryptionInformation.find(delimiter);
+	wasAnIorJ = encryptionInformation.substr(0, delimPos); // extract i/j posistioning info
+	encryptionInformation = encryptionInformation.substr(delimPos + 1, encryptionInformation.size());
+
+	delimPos = encryptionInformation.find(delimiter);
+	capitalizationTracker = encryptionInformation.substr(0, delimPos); // extract capitalization info
+	encryptionInformation = encryptionInformation.substr(delimPos + 1, encryptionInformation.size());
+
+	delimPos = encryptionInformation.find(delimiter);
+	bufferInsertedAt = encryptionInformation.substr(0, delimPos); // extract buffer positioning info
+	encryptionInformation = encryptionInformation.substr(delimPos + 1, encryptionInformation.size());
+
+	//Perform decryption
+	string plaintext = "";
+
+	for (int i = 0; i < ciphertext.size();) //perform a rough translation, we will correct padded characters and capitalization later 
+	{
+		char firstLetter = ciphertext[i];
 		pair<int, int> pos1 = findPosition(playfairMatrix, firstLetter);
-		char secondLetter = cipherText[i+1];
+		char secondLetter = ciphertext[i+1];
 		pair<int, int> pos2 = findPosition(playfairMatrix, secondLetter);
 
 		if (pos1.first == pos2.first) //if letters are in the same row
 		{
 			int col = (pos1.second + 4) % 5; //replace letter with letter to the left of it, wrapping horizontally
-			unofficialPlaintext += playfairMatrix[pos1.first][col]; //and append it to the ciphertext
+			plaintext += playfairMatrix[pos1.first][col]; //and append it to the ciphertext
 
 			int col2 = (pos2.second + 4) % 5;
-			unofficialPlaintext += playfairMatrix[pos2.first][col2];
+			plaintext += playfairMatrix[pos2.first][col2];
 		}
 		else if (pos1.second == pos2.second) //if letters are in the same column
 		{
 			int row = (pos1.first + 4) % 5; //replace letter with letter beneath it, wrapping vertically
-			unofficialPlaintext += playfairMatrix[row][pos1.second]; //and append it to the ciphertext
+			plaintext += playfairMatrix[row][pos1.second]; //and append it to the ciphertext
 
 			int row2 = (pos2.first + 4) % 5;
-			unofficialPlaintext += playfairMatrix[row2][pos2.second];
+			plaintext += playfairMatrix[row2][pos2.second];
 		}
 		else //if letters are in differing columns and rows
 		{
-			unofficialPlaintext += playfairMatrix[pos1.first][pos2.second]; //first letter is replaced by the letter that falls in the row of the first letter and column of the second letter
-			unofficialPlaintext += playfairMatrix[pos2.first][pos1.second]; //second letter is replaced by the letter that falls in the row of the second letter and column of the first letter
+			plaintext += playfairMatrix[pos1.first][pos2.second]; //first letter is replaced by the letter that falls in the row of the first letter and column of the second letter
+			plaintext += playfairMatrix[pos2.first][pos1.second]; //second letter is replaced by the letter that falls in the row of the second letter and column of the first letter
 		}
 		i += 2; //move to next block
 	}
@@ -293,9 +357,9 @@ string Playfair::decrypt(const string& cipherText)
 	//We now have the unofficial plaintext that we must process to retreive original plaintext
 	for (int i = 0; i < wasAnIorJ.size(); i++) //indicate i's and j's
 	{
-		if (unofficialPlaintext[i] == 'i')
+		if (plaintext[i] == 'i')
 		{
-			unofficialPlaintext[i] = wasAnIorJ[i];
+			plaintext[i] = wasAnIorJ[i];
 		}
 	}
 
@@ -303,24 +367,20 @@ string Playfair::decrypt(const string& cipherText)
 	{
 		if (bufferInsertedAt[i] == 'x')
 		{
-			unofficialPlaintext[i] = '-'; 
+			plaintext[i] = '-'; 
 		}
 	}
-	unofficialPlaintext.erase(std::remove(unofficialPlaintext.begin(), unofficialPlaintext.end(), '-'), unofficialPlaintext.end());
+	plaintext.erase(std::remove(plaintext.begin(), plaintext.end(), '-'), plaintext.end());
 
-	for (int i = 0; i < unofficialPlaintext.size(); i++) //plaintext should be correct now, just have to adjust capitalization
+	for (int i = 0; i < plaintext.size(); i++) //plaintext should be correct now, just have to adjust capitalization
 	{
 		if (capitalizationTracker[i] == 'u')
 		{
-			plainText += toupper(unofficialPlaintext[i]);
-		}
-		else
-		{
-			plainText += unofficialPlaintext[i];
+			plaintext[i] = toupper(plaintext[i]);
 		}
 	}
 	
-	return plainText;
+	return plaintext;
 }
 
 void Playfair::printMatrix()
