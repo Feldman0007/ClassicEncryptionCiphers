@@ -27,15 +27,12 @@ string Railfence::encrypt(const string& p)
 		if (isupper(plaintext[i])) //scan for case
 		{
 			capitalizationTracker += "u";
+			plaintext[i] = tolower(plaintext[i]);
 		}
 		else
 		{
 			capitalizationTracker += "l";
 		}
-	}
-	for (int i = 0; i < plaintext.size(); i++)
-	{
-		plaintext[i] = tolower(plaintext[i]);
 	}
 
 	//get the number of rails and the length of rails
@@ -46,7 +43,7 @@ string Railfence::encrypt(const string& p)
 	int railLength = ceil(plaintext.size() / double(numRails)); //number of columns if we treat rails as 2d Matrix 	
 	
 	//Create rail "matrix"
-	memset(rails, '-', sizeof(rails[0][0]) * 100 * 100);
+	memset(rails, '-', sizeof(rails[0][0]) * MAX_MATRIX_COLS * numRails);
 	int cursor = 0; //keeps track of position in plaintext 
 	bool doneProcessing = false;
 	for (int col = 0; col < railLength; col++)
@@ -147,7 +144,7 @@ string Railfence::decrypt(const string& p)
 	{
 		for (int j = 0; j < numRails; j++)
 		{
-			if (rails[j][i] == '-')
+			if (rails[j][i] == '-' || rails[j][i] == '\0')
 			{
 				break;
 			}

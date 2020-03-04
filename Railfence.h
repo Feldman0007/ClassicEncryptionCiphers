@@ -2,6 +2,8 @@
 #ifndef RAILFENCE_H
 #define RAILFENCE_H
 
+#define MAX_RAILS 10
+
 #include <vector>   /* For vectors */
 #include <string>   /* For C++ strings */
 #include <stdio.h>  /* For standard I/O */
@@ -52,7 +54,7 @@ public:
 	/* The protected members */
 protected:
 
-	char rails[100][100];
+	char rails[MAX_RAILS][MAX_MATRIX_COLS];
 	string capitalizationTracker = "";
 
 };

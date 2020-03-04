@@ -1,6 +1,8 @@
 #ifndef __CIPHER_INTERFACE__
 #define __CIPHER_INTERFACE__
 
+#define MAX_MATRIX_COLS 10000
+
 #include <string> /* For C++ strings */
 
 using namespace std;

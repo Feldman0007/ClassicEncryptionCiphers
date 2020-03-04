@@ -10,3 +10,7 @@ Your README file should include:
 – How to execute your program.
 – Whether you implemented the extra credit.
 – Anything special about your submission that we should take note of.
+
+In cipher interface - set the max_num_columns to a large size if the input is large, or my implementation won't work. 10,000 character input may need to be 5000
+Also, in Railfence.h MAX_RAILS is used to initialized the rails array. Currently is set to 10 but if more than 10 rails are going to be used then change this value
+If we run encryption on a plaintext, just for funsies, program will not work because I don't handle capitalization in decryption, I assume case was already stripped during encryption

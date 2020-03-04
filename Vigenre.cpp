@@ -43,16 +43,14 @@ string Vigenre::encrypt(const string& p)
 		if (isupper(plaintext[i])) //scan for case
 		{
 			capitalizationTracker += "u";
+			plaintext[i] = tolower(plaintext[i]);
 		}
 		else
 		{
 			capitalizationTracker += "l";
 		}
 	}
-	for (int i = 0; i < plaintext.size(); i++)
-	{
-		plaintext[i] = tolower(plaintext[i]);
-	}
+
 	//Stretch key out to meet the length of the plaintext 
 	if (key.size() > plaintext.size())
 	{

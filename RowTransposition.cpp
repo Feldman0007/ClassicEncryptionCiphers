@@ -45,8 +45,8 @@ string RowTransposition::encrypt(const string& p)
 	}
 
 	//initialize transposition matrix to a default value
-	memset(transpositionMatrix, '-', sizeof(transpositionMatrix[0][0]) * 100 * 7);
-	memset(rearrangedTranspositionMatrix, '-', sizeof(transpositionMatrix[0][0]) * 100 * 7);
+	memset(transpositionMatrix, '-', sizeof(transpositionMatrix[0][0]) * MAX_MATRIX_COLS * 7);
+	memset(rearrangedTranspositionMatrix, '-', sizeof(transpositionMatrix[0][0]) * MAX_MATRIX_COLS * 7);
 
 	//First scan input text for positions of capital letters, then strip case
 	string plaintext = p;
@@ -55,22 +55,18 @@ string RowTransposition::encrypt(const string& p)
 		if (isupper(plaintext[i])) //scan for case
 		{
 			capitalizationTracker += "u";
+			plaintext[i] = tolower(plaintext[i]);
 		}
 		else
 		{
 			capitalizationTracker += "l";
 		}
 	}
-	for (int i = 0; i < plaintext.size(); i++)
-	{
-		plaintext[i] = tolower(plaintext[i]);
-	}
 
-	string ciphertext = "";
 	int cursor = 0;
 	int numRows = 0;
 	bool tableComplete = false; //use to short circuit
-	for (int i = 0; i < 100; i++) //Populate transposition matrix
+	for (int i = 0; i < MAX_MATRIX_COLS; i++) //Populate transposition matrix
 	{
 		for (int j = 0; j < 7; j++)
 		{
@@ -89,12 +85,13 @@ string RowTransposition::encrypt(const string& p)
 		}
 	}
 	//perform encryption
-	for (int i = 0; i < key.size(); i++) 
+	string ciphertext = "";
+	for (int i = 0; i < 7; i++) //for each column rearrange based on order of key
 	{
 		char c = key[i];
-		int col = -1 + c - '0'; //rearrange columns based on order of key
+		int col = -1 + c - '0'; //get column number. -1 so we can get the proper index.
 		int row = 0;
-		while(transpositionMatrix[row][col] != '-' && row < 100)
+		while(transpositionMatrix[row][col] != '-' && transpositionMatrix[row][col] != '\0'  && row < MAX_MATRIX_COLS)
 		{
 			ciphertext += transpositionMatrix[row][col]; //generate ciphertext
 			rearrangedTranspositionMatrix[row][i] = transpositionMatrix[row][col]; //rearrange columns
@@ -103,14 +100,18 @@ string RowTransposition::encrypt(const string& p)
 	}
 
 	//ENCODE ALL NECESSARY INFORMATION FOR DECRYPTION*****************************************************************************************************************************************************************
-	string encryptionInformation; //this will contain our ciphertext as well as necessary information needed for decryption
+	string encryptionInformation = ""; //this will contain our ciphertext as well as necessary information needed for decryption
 	for (int i = 0; i < ciphertext.size(); i++)
 	{
-		encryptionInformation += ciphertext[i]; //the first line will contain the ciphertext,
+		encryptionInformation += ciphertext[i]; //the first line will contain the ciphertext
 	}
 	encryptionInformation += ' '; //delimited by a space
 
-	encryptionInformation += '0' + numRows; //store the number of rows we used 
+	stringstream intTostring;
+	string strNumRows;
+	intTostring << numRows; 
+	intTostring >> strNumRows;
+	encryptionInformation += strNumRows; //store the number of rows we used 
 
 	encryptionInformation += ' ';
 

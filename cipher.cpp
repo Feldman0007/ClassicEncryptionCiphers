@@ -27,17 +27,17 @@ int main(int argc, char** argv)
 {
 	
 	//Testing
-	CipherInterface* cipher = new Vigenre();
-	CipherInterface* cipher1 = new Caesar();
-	CipherInterface* cipher2 = new RowTransposition();
-	CipherInterface* cipher3 = new Playfair();
-	CipherInterface* cipher4 = new Railfence();
+	//CipherInterface* cipher = new Vigenre();
+	//CipherInterface* cipher1 = new Caesar();
+	//CipherInterface* cipher2 = new RowTransposition();
+	//CipherInterface* cipher3 = new Playfair();
+	//CipherInterface* cipher4 = new Railfence();
 
-	validateAndSetKey(cipher, "security");
-	validateAndSetKey(cipher1, "4"); //try invalid keys too
-	validateAndSetKey(cipher2, "7654321");
-	validateAndSetKey(cipher3, "security");
-	validateAndSetKey(cipher4, "4");
+	//validateAndSetKey(cipher, "security");
+	//validateAndSetKey(cipher1, "4");
+	//validateAndSetKey(cipher2, "7654321");
+	//validateAndSetKey(cipher3, "security");
+	//validateAndSetKey(cipher4, "4");
 
 	//performOperation(cipher, "enc", "small.txt", "vgencrypt.txt");
 	//performOperation(cipher1, "enc", "small.txt", "csencrypt.txt");
@@ -45,61 +45,61 @@ int main(int argc, char** argv)
 	//performOperation(cipher3, "enc", "small.txt", "pfencrypt.txt");
 	//performOperation(cipher4, "enc", "small.txt", "rfencrypt.txt");
 
-	performOperation(cipher, "dec", "vgencrypt.txt", "vgdecrypt.txt");
-	performOperation(cipher1, "dec", "csencrypt.txt", "csdecrypt.txt");
-	performOperation(cipher2, "dec", "rtencrypt.txt", "rtdecrypt.txt");
-	performOperation(cipher3, "dec", "pfencrypt.txt", "pfdecrypt.txt");
-	performOperation(cipher4, "dec", "rfencrypt.txt", "rfdecrypt.txt");
-
-	return 0;
-
-	///*Make sure we have only 5 command line arguments before moving forward*/
-	//if (argc != 5)
-	//{
-	//	cout << "cipher.exe only accepts 5 arguments: <CIPHER NAME> <KEY> <ENC/DEC> <INPUTFILE> <OUTPUT FILE>" << endl;
-	//	exit(-1);
-	//}
-
-	///*Variables used to parse the command line argument and execute the ciphers dynamically*/
-	//string cipherName = argv[1];
-	//string key = argv[2];
-	//string operation = argv[3];
-	//string inputFileName = argv[4];
-	//string outputFileName = argv[5];
-
-	//CipherInterface* cipher = nullptr; /*pointer to an instance of our cipher*/
-
-	//if (iequals(cipherName, "PLF")) 
-	//{
-	//	cipher = new Playfair();
-	//}
-	//else if (iequals(cipherName, "RFC")) 
-	//{
-	//	cipher = new Railfence();
-	//}
-	//else if (iequals(cipherName, "CES"))
-	//{
-	//	cipher = new Caesar();
-	//}
-	//else if (iequals(cipherName, "RTS"))
-	//{
-	//	cipher = new RowTransposition();
-	//}
-	//else if (iequals(cipherName, "VIG"))
-	//{
-	//	cipher = new Vigenre();
-	//}
-	//else
-	//{
-	//	cout << "Invalid cipher type!\n";
-	//	exit(-1);
-	//}
-
-	//assertValidCipherAssignment(cipher);
-	//validateAndSetKey(cipher, key);
-	//performOperation(cipher, operation, inputFileName, outputFileName);
+	//performOperation(cipher, "dec", "vgencrypt.txt", "vgdecrypt.txt");
+	//performOperation(cipher1, "dec", "csencrypt.txt", "csdecrypt.txt");
+	//performOperation(cipher2, "dec", "rtencrypt.txt", "rtdecrypt.txt");
+	//performOperation(cipher3, "dec", "pfencrypt.txt", "pfdecrypt.txt");
+	//performOperation(cipher4, "dec", "rfencrypt.txt", "rfdecrypt.txt");
 
 	//return 0;
+
+	/*Make sure we have only 5 command line arguments before moving forward*/
+	if (argc != 5)
+	{
+		cout << "cipher.exe only accepts 5 arguments: <CIPHER NAME> <KEY> <ENC/DEC> <INPUTFILE> <OUTPUT FILE>" << endl;
+		exit(-1);
+	}
+
+	/*Variables used to parse the command line argument and execute the ciphers dynamically*/
+	string cipherName = argv[1];
+	string key = argv[2];
+	string operation = argv[3];
+	string inputFileName = argv[4];
+	string outputFileName = argv[5];
+
+	CipherInterface* cipher = nullptr; /*pointer to an instance of our cipher*/
+
+	if (iequals(cipherName, "PLF")) 
+	{
+		cipher = new Playfair();
+	}
+	else if (iequals(cipherName, "RFC")) 
+	{
+		cipher = new Railfence();
+	}
+	else if (iequals(cipherName, "CES"))
+	{
+		cipher = new Caesar();
+	}
+	else if (iequals(cipherName, "RTS"))
+	{
+		cipher = new RowTransposition();
+	}
+	else if (iequals(cipherName, "VIG"))
+	{
+		cipher = new Vigenre();
+	}
+	else
+	{
+		cout << "Invalid cipher type!\n";
+		exit(-1);
+	}
+
+	assertValidCipherAssignment(cipher);
+	validateAndSetKey(cipher, key);
+	performOperation(cipher, operation, inputFileName, outputFileName);
+
+	return 0;
 }
 
 void validateAndSetKey(CipherInterface* const cipher, const string& key)

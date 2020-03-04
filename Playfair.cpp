@@ -1,7 +1,6 @@
 #include "Playfair.h"
 #include <unordered_map>
 
-
 //Helper function used to help us find the coordinates of a letter in the playfair matrix
 pair<int, int> findPosition(char matrix[][5], char letter)
 {
@@ -52,15 +51,12 @@ string Playfair::encrypt(const string& p)
 		if (isupper(plaintext[i])) //scan for case
 		{
 			capitalizationTracker += "u";
+			plaintext[i] = tolower(plaintext[i]);
 		}
 		else
 		{
 			capitalizationTracker += "l";
 		}
-	}
-	for (int i = 0; i < plaintext.size(); i++)
-	{
-		plaintext[i] = tolower(plaintext[i]);
 	}
 
 	bool isNewBlock = false; //flag variable used to make sure we look at blocks two letters at a time when searching for two identical letters 
