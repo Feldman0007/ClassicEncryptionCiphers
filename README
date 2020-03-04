@@ -1,16 +1,15 @@
-To compile, simply, type ''make'' at the terminal (without the quotes).
-
-Please do not forget to include a README file in your submission.
-It's worth 5 points.
-
-Your README file should include:
-
-– Names and email addresses of all partners.
-– The programming language you use (e.g. C++, Java, Python)
-– How to execute your program.
-– Whether you implemented the extra credit.
-– Anything special about your submission that we should take note of.
-
-In cipher interface - set the max_num_columns to a large size if the input is large, or my implementation won't work. 10,000 character input may need to be 5000
-Also, in Railfence.h MAX_RAILS is used to initialized the rails array. Currently is set to 10 but if more than 10 rails are going to be used then change this value
-If we run encryption on a plaintext, just for funsies, program will not work because I don't handle capitalization in decryption, I assume case was already stripped during encryption
+– Group Members (solo): Alexander Feldman - feldman0007@csu.fullerton.edu
+– Programming Language: C++
+– Execution Instructions:
+  1. Open terminal and navigate to project folder. Type 'make' into terminal to compile.
+  2. Run the executable to test program on different ciphers using the following command format (case insensitive for all):
+    2a ./cipher <CIPHER NAME> <KEY> <ENC/DEC> <INPUTFILE> <OUTPUT FILE>
+               <CIPHER NAME> can be: "PLF": Playfair; "RTS": Row Transposition; "RFC": Railfence; "VIG": Vigenre; "CES": Caesar;
+               <KEY> will vary depending on the cipher. There is key validation in place. Railfence will not work if key is larger 10. Max key can be increased
+                      by increasing MAX_RAILS in Railfence.h
+               <ENC/DEC> will be "ENC" for encryption and "DEC" for decyption
+               <INPUTFILE> && <OUTPUT FILE> format: "____.txt"
+– I did not do the extra credit, although if I had enough time i would have because they looked fun! :(
+- IMPORTANT NOTES: 
+    If input is very large (over 10,000 characters), my implementation may not work. Can be fixed in cipher interface by increasing MAX_MATRIX_COLS to a large number
+    Also, if decryption is ran before encryption, my program will crash because I do not strip case in decryption. That is handled in encryption.
