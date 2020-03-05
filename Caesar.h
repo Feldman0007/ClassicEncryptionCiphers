@@ -4,7 +4,8 @@
 
 #include "CipherInterface.h"
 #include <iostream>
-#inlcude <sstream>
+#include <sstream>
+#include <cstdlib>
 
 class Caesar : public CipherInterface
 {

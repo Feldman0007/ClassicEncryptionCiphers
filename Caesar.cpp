@@ -53,9 +53,7 @@ string Caesar::decrypt(const string& cipherText)
 	{
 		return "";
 	}
-	stringstream convert(key);
-	int intKey;
-	convert >> intKey;//convert key to integer
+	int intKey = std::stoi(key); //convert key to integer
 	string plainText = "";
 
 	//transform each letter in original phrase
