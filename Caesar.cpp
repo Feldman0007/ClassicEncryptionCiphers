@@ -26,7 +26,9 @@ string Caesar::encrypt(const string& plaintext)
 	{
 		return "";
 	}
-	int intKey = std::stoi(key); //convert key to integer
+	stringstream convert(key);
+	int intKey;
+	convert >> intKey;//convert key to integer
 	string cipherText = "";
 
 	//transform each letter in original phrase
