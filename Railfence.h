@@ -9,6 +9,8 @@
 #include <stdio.h>  /* For standard I/O */
 #include <stdlib.h> /* For miscellenous C functions */
 #include "CipherInterface.h"
+#include <cmath>
+#include <cstring>
 #include <sstream>
 
 using namespace std;

@@ -9,13 +9,17 @@ bool RowTransposition::setKey(const string& inputkey)
 	}
 	for (int i = 0; i < key.size(); i++)
 	{
-		if (!isdigit(inputkey[i])) 
+		if (!isdigit(inputkey[i]))
 		{
 			return false;
 		}
 		else //ensure that the key is a permutation of numbers 1-7
 		{
-			numberEncountered[-1 + int(inputkey[i])] = true;
+			stringstream charToAscii;
+			charToAscii << inputkey[i];
+			int keyValue;
+			charToAscii >> keyValue;
+			numberEncountered[keyValue - 1] = true;
 		}
 	}
 	bool validKey = true;
@@ -109,9 +113,9 @@ string RowTransposition::encrypt(const string& p)
 
 	stringstream intTostring;
 	string strNumRows;
-	intTostring << numRows; 
+	intTostring << numRows;
 	intTostring >> strNumRows;
-	encryptionInformation += strNumRows; //store the number of rows we used 
+	encryptionInformation += strNumRows; //store the number of rows we used
 
 	encryptionInformation += ' ';
 
@@ -154,7 +158,7 @@ string RowTransposition::decrypt(const string& p)
 	int numRows = 0;
 	asciiToInt >> numRows;
 	encryptionInformation = encryptionInformation.substr(delimPos + 1, encryptionInformation.size());
-	
+
 	delimPos = encryptionInformation.find(delimiter);
 	token = encryptionInformation.substr(0, delimPos); // extract table info
 	encryptionInformation = encryptionInformation.substr(delimPos + 1, encryptionInformation.size());
@@ -186,10 +190,10 @@ string RowTransposition::decrypt(const string& p)
 			for (int k = 0; k < 7; k++)
 			{
 				char c = key[k];
-				int keyValue = -1 + c - '0'; 
+				int keyValue = -1 + c - '0';
 				if (keyValue == j) //find column position 1,2,3,...7
 				{
-					if (rearrangedTranspositionMatrix[i][k] != '-') 
+					if (rearrangedTranspositionMatrix[i][k] != '-')
 					{
 						plaintext += rearrangedTranspositionMatrix[i][k]; //read off the ordered rows to obtain plaintext
 					}
@@ -197,7 +201,7 @@ string RowTransposition::decrypt(const string& p)
 			}
 		}
 	}
-	
+
 	for (int i = 0; i < capitalizationTracker.size(); i++)
 	{
 		if (capitalizationTracker[i] == 'u')

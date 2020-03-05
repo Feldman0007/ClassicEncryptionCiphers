@@ -25,7 +25,7 @@ void performOperation(CipherInterface* const, const string&, const string&, cons
 
 int main(int argc, char** argv)
 {
-	
+
 	//Testing
 	//CipherInterface* cipher = new Vigenre();
 	//CipherInterface* cipher1 = new Caesar();
@@ -54,7 +54,7 @@ int main(int argc, char** argv)
 	//return 0;
 
 	/*Make sure we have only 5 command line arguments before moving forward*/
-	if (argc != 5)
+	if (argc != 6)
 	{
 		cout << "cipher.exe only accepts 5 arguments: <CIPHER NAME> <KEY> <ENC/DEC> <INPUTFILE> <OUTPUT FILE>" << endl;
 		exit(-1);
@@ -69,11 +69,11 @@ int main(int argc, char** argv)
 
 	CipherInterface* cipher = nullptr; /*pointer to an instance of our cipher*/
 
-	if (iequals(cipherName, "PLF")) 
+	if (iequals(cipherName, "PLF"))
 	{
 		cipher = new Playfair();
 	}
-	else if (iequals(cipherName, "RFC")) 
+	else if (iequals(cipherName, "RFC"))
 	{
 		cipher = new Railfence();
 	}
@@ -134,7 +134,7 @@ void performOperation(CipherInterface* const cipher, const string& operation, co
 	}
 }
 
-string readFile(const string& filename) 
+string readFile(const string& filename)
 {
 	fstream fileReader;
 	fileReader.open(filename, ios::in);
@@ -150,7 +150,7 @@ string readFile(const string& filename)
 
 	string fileContents; /*Buffer to hold file contents*/
 
-	while (!fileReader.eof()) 
+	while (!fileReader.eof())
 	{
 		string buffer = "";
 		fileReader >> buffer;
@@ -160,7 +160,7 @@ string readFile(const string& filename)
 		}
 		//Add a space between each peice of info. don't add a space at the end though
 
-		if (!fileReader.eof()) 
+		if (!fileReader.eof())
 		{
 			fileContents += ' ';
 		}
@@ -179,7 +179,7 @@ void writeFile(const string& filename, const string& results)
 		exit(-1);
 	}
 
-	for (int i = 0; i < results.size(); i++) 
+	for (int i = 0; i < results.size(); i++)
 	{
 		fileWriter << results[i];
 	}
@@ -197,7 +197,7 @@ bool iequals(const string& a, const string& b) //case insensitive comparison
 	return true;
 }
 
-void assertValidCipherAssignment(const CipherInterface* cipher) 
+void assertValidCipherAssignment(const CipherInterface* cipher)
 {
 	/*Error checking*/
 	if (!cipher)
