@@ -5,6 +5,7 @@
     -If input is very large (over 10,000 characters), my implementation may not work. Can be fixed in cipher interface by increasing MAX_MATRIX_COLS to a large number
     -Also, if decryption is ran before encryption, my program will crash because I do not strip case in decryption. That is handled in encryption.
     -For Railfence if key (number of rails) is larger 10 the MAX_RAILS should be increased in Railfence.h
+    -For RowTransposition, if the range of the key is greater than 1-100, then the numberEncountered array in RowTransposition.cpp in the setKey function should be increased.
 – Execution Instructions:
   1. Open terminal and navigate to the project folder. Type 'make' into terminal to compile.
   2. Run the executable to test program on different ciphers using the following command format (case insensitive for all):
