@@ -1,5 +1,7 @@
 #include "Playfair.h"
-#include <unordered_map>
+#include <tr1/unordered_map>
+
+using namespace std::tr1;
 
 //Helper function used to help us find the coordinates of a letter in the playfair matrix
 pair<int, int> findPosition(char matrix[][5], char letter)
@@ -19,7 +21,7 @@ pair<int, int> findPosition(char matrix[][5], char letter)
 }
 
 bool Playfair::setKey(const string& inputkey)
-{ 
+{
 	for (int i = 0; i < inputkey.size(); i++)
 	{
 		if (!isalpha(inputkey[i]))
@@ -28,7 +30,7 @@ bool Playfair::setKey(const string& inputkey)
 		}
 	}
 	key = inputkey;
-	return true;  
+	return true;
 }
 
 string Playfair::encrypt(const string& p)
@@ -43,8 +45,8 @@ string Playfair::encrypt(const string& p)
 	int columnPosition = 0;
 
 	string plaintext = p; //creating a duplicate of plaintext so we can modify
-	string ciphertext; 
-	
+	string ciphertext;
+
 	//First scan input text for positions of capital letters, then strip case
 	for (int i = 0; i < plaintext.size(); i++)
 	{
@@ -59,7 +61,7 @@ string Playfair::encrypt(const string& p)
 		}
 	}
 
-	bool isNewBlock = false; //flag variable used to make sure we look at blocks two letters at a time when searching for two identical letters 
+	bool isNewBlock = false; //flag variable used to make sure we look at blocks two letters at a time when searching for two identical letters
 	for (int i = 0; i < plaintext.size(); i++) //then scan for i/j's, duplicate letters, odd input size padding so we can preserve plaintext through encryption and decryption
 	{
 		if (plaintext[i] == 'j' || plaintext[i] == 'i') //scan for i's and j's
@@ -87,7 +89,7 @@ string Playfair::encrypt(const string& p)
 			}
 			else
 			{
-				if ((plaintext[i] == 'i' || plaintext[i] == 'j') && (plaintext[i + 1] == 'i' || plaintext[i + 1] == 'j')) 
+				if ((plaintext[i] == 'i' || plaintext[i] == 'j') && (plaintext[i + 1] == 'i' || plaintext[i + 1] == 'j'))
 				{
 					bufferInsertedAt += '-';
 					bufferInsertedAt += 'x';
@@ -98,7 +100,7 @@ string Playfair::encrypt(const string& p)
 				{
 					bufferInsertedAt += '-';
 					bufferInsertedAt += 'x';
-					wasAnIorJ += '-'; 
+					wasAnIorJ += '-';
 					isNewBlock = false;
 				}
 				else
@@ -107,7 +109,7 @@ string Playfair::encrypt(const string& p)
 					bufferInsertedAt += '-';
 				}
 			}
-		}		
+		}
 	}
 
 	//Create matrix using key
@@ -122,7 +124,7 @@ string Playfair::encrypt(const string& p)
 				encounteredLetter['j'] = true;
 				playfairMatrix[rowPosition][columnPosition] = 'i';
 			}
-			else 
+			else
 			{
 				encounteredLetter[letter] = true;
 				playfairMatrix[rowPosition][columnPosition] = letter;
@@ -137,7 +139,7 @@ string Playfair::encrypt(const string& p)
 		}
 	}
 	//If key is less than 26 characters long, run through the alphabet to populate the rest of the matrix
-	while (rowPosition != 5) 
+	while (rowPosition != 5)
 	{
 		for (int i = 0; i < 26; i++)
 		{
@@ -159,7 +161,7 @@ string Playfair::encrypt(const string& p)
 	for (int i = 0; i < plaintext.size();)
 	{
 		bool paddingUsed = false;
-		
+
 		char firstLetter;
 		if(plaintext[i] == 'i' || plaintext[i] == 'j')
 		{
@@ -175,7 +177,7 @@ string Playfair::encrypt(const string& p)
 
 		if(((i+1) == plaintext.size())) //If there is an odd amount of characters in input and we are on last letter, pad it with an x
 		{
-			if (firstLetter == 'x') 
+			if (firstLetter == 'x')
 			{
 				secondLetter = 'z';
 			}
@@ -199,7 +201,7 @@ string Playfair::encrypt(const string& p)
 
 		if (firstLetter == secondLetter)
 		{
-			if (firstLetter == 'x') 
+			if (firstLetter == 'x')
 			{
 				secondLetter = 'z';
 			}
@@ -209,7 +211,7 @@ string Playfair::encrypt(const string& p)
 			}
 			paddingUsed = true;
 		}
-		
+
 		pos2 = findPosition(playfairMatrix, secondLetter); //we set pos2 here because we needed to know whether or not we're using a padded letter for secondLetter
 
 		if (pos1.first == pos2.first) //if letters are in the same row
@@ -224,7 +226,7 @@ string Playfair::encrypt(const string& p)
 		{
 			int row = (pos1.first + 1) % 5; //replace letter with letter beneath it, wrapping vertically
 			ciphertext += playfairMatrix[row][pos1.second]; //and append it to the ciphertext
-			
+
 			int row2 = (pos2.first + 1) % 5;
 			ciphertext += playfairMatrix[row2][pos2.second];
 		}
@@ -234,11 +236,11 @@ string Playfair::encrypt(const string& p)
 			ciphertext += playfairMatrix[pos2.first][pos1.second]; //second letter is replaced by the letter that falls in the row of the second letter and column of the first letter
 		}
 
-		if (paddingUsed) 
+		if (paddingUsed)
 		{
 			i += 1; //processed only one actual letter of the plaintext since we inserted a buffer letter
 		}
-		else 
+		else
 		{
 			i += 2; //we processed to two letters of the plaintext. no padding was used.
 		}
@@ -269,7 +271,7 @@ string Playfair::encrypt(const string& p)
 		encryptionInformation += capitalizationTracker[i];  //this section will contain the capitalization of the original plaintext
 	}
 	encryptionInformation += ' '; //delimited by a space
-	for (int i = 0; i < bufferInsertedAt.size(); i++) 
+	for (int i = 0; i < bufferInsertedAt.size(); i++)
 	{
 		encryptionInformation += bufferInsertedAt[i]; //this section will contain the location of buffers inserted during playfair encryption
 	}
@@ -278,7 +280,7 @@ string Playfair::encrypt(const string& p)
 }
 
 string Playfair::decrypt(const string& p)
-{ 
+{
 	if (p.size() == 0)
 	{
 		return "";
@@ -319,7 +321,7 @@ string Playfair::decrypt(const string& p)
 	//Perform decryption
 	string plaintext = "";
 
-	for (int i = 0; i < ciphertext.size();) //perform a rough translation, we will correct padded characters and capitalization later 
+	for (int i = 0; i < ciphertext.size();) //perform a rough translation, we will correct padded characters and capitalization later
 	{
 		char firstLetter = ciphertext[i];
 		pair<int, int> pos1 = findPosition(playfairMatrix, firstLetter);
@@ -349,7 +351,7 @@ string Playfair::decrypt(const string& p)
 		}
 		i += 2; //move to next block
 	}
-	
+
 	//We now have the unofficial plaintext that we must process to retreive original plaintext
 	for (int i = 0; i < wasAnIorJ.size(); i++) //indicate i's and j's
 	{
@@ -363,7 +365,7 @@ string Playfair::decrypt(const string& p)
 	{
 		if (bufferInsertedAt[i] == 'x')
 		{
-			plaintext[i] = '-'; 
+			plaintext[i] = '-';
 		}
 	}
 	plaintext.erase(std::remove(plaintext.begin(), plaintext.end(), '-'), plaintext.end());
@@ -375,7 +377,7 @@ string Playfair::decrypt(const string& p)
 			plaintext[i] = toupper(plaintext[i]);
 		}
 	}
-	
+
 	return plaintext;
 }
 
@@ -390,4 +392,3 @@ void Playfair::printMatrix()
 		cout << endl;
 	}
 }
-

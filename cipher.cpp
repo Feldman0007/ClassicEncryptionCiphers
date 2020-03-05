@@ -67,7 +67,7 @@ int main(int argc, char** argv)
 	string inputFileName = argv[4];
 	string outputFileName = argv[5];
 
-	CipherInterface* cipher = nullptr; /*pointer to an instance of our cipher*/
+	CipherInterface* cipher = NULL; /*pointer to an instance of our cipher*/
 
 	if (iequals(cipherName, "PLF"))
 	{
@@ -137,7 +137,7 @@ void performOperation(CipherInterface* const cipher, const string& operation, co
 string readFile(const string& filename)
 {
 	fstream fileReader;
-	fileReader.open(filename, ios::in);
+	fileReader.open(filename.c_str(), ios::in);
 	if (fileReader.fail()) {
 		cout << "Error opening input file!" << endl;
 			exit(-1);
@@ -173,7 +173,7 @@ string readFile(const string& filename)
 void writeFile(const string& filename, const string& results)
 {
 	fstream fileWriter;
-	fileWriter.open(filename, ios::out | ios::trunc);
+	fileWriter.open(filename.c_str(), ios::out | ios::trunc);
 	if (fileWriter.fail()) {
 		cout << "Error opening output file!" << endl;
 		exit(-1);
