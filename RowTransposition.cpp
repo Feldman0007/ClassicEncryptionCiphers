@@ -2,43 +2,48 @@
 
 bool RowTransposition::setKey(const string& inputkey)
 {
-	bool numberEncountered[7];
-	if (inputkey.size() != 7)
-	{
-		return false;
-	}
-	for (int i = 0; i < key.size(); i++)
+	bool numberEncountered[100]; //I'm assuming here that we won't receive a key greater than size 100
+
+	// The key value
+	int keyValue = -1;
+
+	// The resturn value
+	bool retVal = false;
+
+	for (int i = 0; i < inputkey.size(); i++)
 	{
 		if (!isdigit(inputkey[i]))
 		{
-			return false;
+			break;
 		}
-		else //ensure that the key is a permutation of numbers 1-7
+		else //ensure that the key is a permutation on numbers 1-keysize
 		{
-			stringstream charToAscii;
-			charToAscii << inputkey[i];
-			int keyValue;
-			charToAscii >> keyValue;
+
+			keyValue = inputkey[i] - 48;
+
 			numberEncountered[keyValue - 1] = true;
 		}
 	}
 	bool validKey = true;
-	for (int i = 0; i < 7; i++)
+
+	for (int i = 0; i < inputkey.size(); i++)
 	{
 		if(numberEncountered[i] == false)
 		{
 			validKey = false;
 		}
 	}
+
 	if (validKey)
 	{
 		key = inputkey;
-		return true;
+		retVal = true;
 	}
 	else
 	{
-		return false;
+		retVal = false;
 	}
+	return retVal;
 }
 
 string RowTransposition::encrypt(const string& p)

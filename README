@@ -1,15 +1,16 @@
 – Group Members (solo): Alexander Feldman - feldman0007@csu.fullerton.edu
 – Programming Language: C++
+– IMPORTANT NOTES BEFORE EXECUTION: 
+    -The output file for encryption will also contain other formatted informaton necessary for decryption. The ciphertext will be the first string of characters up until the first whitespace.
+    -If input is very large (over 10,000 characters), my implementation may not work. Can be fixed in cipher interface by increasing MAX_MATRIX_COLS to a large number
+    -Also, if decryption is ran before encryption, my program will crash because I do not strip case in decryption. That is handled in encryption.
+    -For Railfence if key (number of rails) is larger 10 the MAX_RAILS should be increased in Railfence.h
 – Execution Instructions:
-  1. Open terminal and navigate to project folder. Type 'make' into terminal to compile.
+  1. Open terminal and navigate to the project folder. Type 'make' into terminal to compile.
   2. Run the executable to test program on different ciphers using the following command format (case insensitive for all):
     2a ./cipher <CIPHER NAME> <KEY> <ENC/DEC> <INPUTFILE> <OUTPUT FILE>
                <CIPHER NAME> can be: "PLF": Playfair; "RTS": Row Transposition; "RFC": Railfence; "VIG": Vigenre; "CES": Caesar;
-               <KEY> will vary depending on the cipher. There is key validation in place. Railfence will not work if key is larger 10. Max key can be increased
-                      by increasing MAX_RAILS in Railfence.h
+               <KEY> will vary depending on the cipher. There is key validation in place. 
                <ENC/DEC> will be "ENC" for encryption and "DEC" for decyption
                <INPUTFILE> && <OUTPUT FILE> format: "____.txt"
-– I did not do the extra credit, although if I had enough time i would have because they looked fun! :(
-- IMPORTANT NOTES: 
-    If input is very large (over 10,000 characters), my implementation may not work. Can be fixed in cipher interface by increasing MAX_MATRIX_COLS to a large number
-    Also, if decryption is ran before encryption, my program will crash because I do not strip case in decryption. That is handled in encryption.
+– I did not do the extra credit, although if I had enough time I would have because it looked very fun! :(
