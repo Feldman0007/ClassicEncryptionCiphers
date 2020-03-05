@@ -3,6 +3,8 @@
 #define CAESAR_H
 
 #include "CipherInterface.h"
+#include <iostream>
+#inlcude <stringstream>
 
 class Caesar : public CipherInterface
 {
