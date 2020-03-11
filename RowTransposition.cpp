@@ -55,6 +55,7 @@ string RowTransposition::encrypt(const string& p)
 
 	//initialize transposition matrix to a default value
 	memset(transpositionMatrix, '-', sizeof(transpositionMatrix[0][0]) * MAX_MATRIX_COLS * key.size());
+	memset(rearrangedTranspositionMatrix, '-', sizeof(transpositionMatrix[0][0]) * MAX_MATRIX_COLS * key.size());
 
 	//First scan input text for positions of capital letters, then strip case
 	string plaintext = p;
