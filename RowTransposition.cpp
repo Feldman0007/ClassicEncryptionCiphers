@@ -54,8 +54,7 @@ string RowTransposition::encrypt(const string& p)
 	}
 
 	//initialize transposition matrix to a default value
-	memset(transpositionMatrix, '-', sizeof(transpositionMatrix[0][0]) * MAX_MATRIX_COLS * 7);
-	memset(rearrangedTranspositionMatrix, '-', sizeof(transpositionMatrix[0][0]) * MAX_MATRIX_COLS * 7);
+	memset(transpositionMatrix, '-', sizeof(transpositionMatrix[0][0]) * MAX_MATRIX_COLS * key.size());
 
 	//First scan input text for positions of capital letters, then strip case
 	string plaintext = p;
@@ -77,7 +76,7 @@ string RowTransposition::encrypt(const string& p)
 	bool tableComplete = false; //use to short circuit
 	for (int i = 0; i < MAX_MATRIX_COLS; i++) //Populate transposition matrix
 	{
-		for (int j = 0; j < 7; j++)
+		for (int j = 0; j < key.size(); j++)
 		{
 			transpositionMatrix[i][j] = plaintext[cursor];
 			cursor++;
@@ -95,7 +94,7 @@ string RowTransposition::encrypt(const string& p)
 	}
 	//perform encryption
 	string ciphertext = "";
-	for (int i = 0; i < 7; i++) //for each column rearrange based on order of key
+	for (int i = 0; i < key.size(); i++) //for each column rearrange based on order of key
 	{
 		char c = key[i];
 		int col = -1 + c - '0'; //get column number. -1 so we can get the proper index.
@@ -126,7 +125,7 @@ string RowTransposition::encrypt(const string& p)
 
 	for (int i = 0; i < numRows; i++)
 	{
-		for (int j = 0; j < 7; j++)
+		for (int j = 0; j < key.size(); j++)
 		{
 			encryptionInformation += rearrangedTranspositionMatrix[i][j]; //next section will contain the encoded rearranged transposition matrix
 		}
@@ -147,6 +146,7 @@ string RowTransposition::decrypt(const string& p)
 	{
 		return "";
 	}
+	memset(rearrangedTranspositionMatrix, '-', sizeof(transpositionMatrix[0][0]) * MAX_MATRIX_COLS * key.size());
 
 	//Parse through encryption for encryption information and ciphertext
 	string encryptionInformation = p;// create copy so we can make modifications during processing
@@ -170,7 +170,7 @@ string RowTransposition::decrypt(const string& p)
 	int cursor = 0;
 	for (int i = 0; i < numRows; i++)
 	{
-		for (int j = 0; j < 7; j++)
+		for (int j = 0; j < key.size(); j++)
 		{
 			rearrangedTranspositionMatrix[i][j] = token[cursor]; //populate plaifair matrix
 			cursor++;
@@ -183,20 +183,21 @@ string RowTransposition::decrypt(const string& p)
 
 	//Perform decryption
 	string plaintext = "";
-	int numberRows = ceil(ciphertext.size() / 7.0); //need to the number of rows by dividing the ciphertext length by key length
+	double keysizeAsDouble = double(key.size());
+	int numberRows = ceil(ciphertext.size() / keysizeAsDouble); //need to the number of rows by dividing the ciphertext length by key length
 	cursor = 0;
 
 	//retreive the plaintext by using the key to rearrange columns
 
-	for (int i = 0; i < numberRows; i++)
+	for (int i = 0; i < numberRows; i++)//for every row
 	{
-		for (int j = 0; j < 7; j++)
+		for (int j = 0; j < key.size(); j++)//for every column
 		{
-			for (int k = 0; k < 7; k++)
+			for (int k = 0; k < key.size(); k++) //for each number in the key
 			{
 				char c = key[k];
 				int keyValue = -1 + c - '0';
-				if (keyValue == j) //find column position 1,2,3,...7
+				if (keyValue == j) //find column position 1,2,3,...n
 				{
 					if (rearrangedTranspositionMatrix[i][k] != '-')
 					{
@@ -221,7 +222,7 @@ void RowTransposition::printMatrix(FILE* fp)
 {
 	for (int i = 0; i < 100; i++)
 	{
-		for (int j = 0; j < 7; j++)
+		for (int j = 0; j < key.size(); j++)
 		{
 			cout << transpositionMatrix[i][j] << " ";
 		}

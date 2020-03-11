@@ -55,8 +55,8 @@ public:
 	/* The protected members */
 protected:
 
-	char transpositionMatrix[MAX_MATRIX_COLS][7]; // holds messages up to 700 characters long
-	char rearrangedTranspositionMatrix[MAX_MATRIX_COLS][7]; //holds the rearranged matrix
+	char transpositionMatrix[MAX_MATRIX_COLS][100]; // holds messages up to 1,000,000 characters long
+	char rearrangedTranspositionMatrix[MAX_MATRIX_COLS][100]; //holds the rearranged matrix
 	string capitalizationTracker = "";
 };
 
