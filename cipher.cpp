@@ -129,7 +129,7 @@ void performOperation(CipherInterface* const cipher, const string& operation, co
 	}
 	else
 	{
-		cout << "This key is not a valid operation!" << endl;
+		cout << "This is not a valid operation!" << endl;
 		exit(-1);
 	}
 }
